@@ -2,12 +2,16 @@
 
 namespace app\controllers;
 
+use app\models\BraintreeWrapper;
+use app\models\ContactForm;
+use app\models\LoginForm;
+use app\models\PaymentForm;
+use app\models\PaymentResult;
+use Braintree_ClientToken;
 use Yii;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
+use yii\web\Controller;
 
 class SiteController extends Controller
 {
@@ -49,46 +53,26 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
-    }
+        $paymentForm = new PaymentForm();
+        $paymentResult = new PaymentResult();
 
-    public function actionLogin()
-    {
-        if (!\Yii::$app->user->isGuest) {
-            return $this->goHome();
+        $braintreeWrapper = new BraintreeWrapper();
+        $clientToken = Braintree_ClientToken::generate();
+
+        if ($paymentForm->load(Yii::$app->request->post())) {
+            $paymentResult = $paymentForm->makePayment();
         }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-        return $this->render('login', [
-            'model' => $model,
-        ]);
+        $viewModel = [
+            'model' => $paymentForm,
+            'paymentResult' => $paymentResult,
+            'clientToken' => $clientToken,
+        ];
+        return $this->render('index', $viewModel);
     }
 
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
+    public function actionGetBraintreeToken(){
+        $braintreeWrapper = new BraintreeWrapper();
+        echo($clientToken = Braintree_ClientToken::generate());
     }
 
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
 }
