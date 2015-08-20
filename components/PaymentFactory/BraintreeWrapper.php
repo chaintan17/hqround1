@@ -57,7 +57,7 @@ class BraintreeWrapper
 
         //Add to database
         $result->save();
-        
+
         return $result;
     }
 
