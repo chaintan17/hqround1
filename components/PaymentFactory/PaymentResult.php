@@ -6,7 +6,7 @@
  * Time: 10:47 PM
  */
 
-namespace app\models;
+namespace app\components\PaymentFactory;
 
 class PaymentResult
 {

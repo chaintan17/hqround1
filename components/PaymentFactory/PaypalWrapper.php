@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\components\PaymentFactory;
 
 use PayPal\Api\Amount;
 use PayPal\Api\CreditCard;

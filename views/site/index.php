@@ -12,7 +12,7 @@ $this->title = 'HQ Round1 PHP';
 
 <?php if($paymentResult->status):?>
     <div class="alert alert-success">
-        Thank you for your payment! <?= $paymentResult->message?>
+        Thank you for your payment! (CODE: <?= $paymentResult->message?>)
     </div>
 <?php elseif($paymentResult->status === false):?>
 <div class="alert alert-danger">
@@ -29,7 +29,7 @@ $this->title = 'HQ Round1 PHP';
     ?>
     <div class="col-sm-6">
     <h2>Order</h2>
-        <?= $form->field($model, "braintree_nonce")->hiddenInput()?>
+        <?= $form->field($model, "braintree_nonce")->hiddenInput()->label(false);?>
     <?= $form->field($model, 'price')?>
     <?= $form->field($model, 'currency')->dropDownList(\app\models\PaymentForm::$currenyList)?>
     <?= $form->field($model, 'full_name')?>
@@ -66,20 +66,25 @@ $this->title = 'HQ Round1 PHP';
 <script>
     var clientToken = new braintree.api.Client({clientToken: "<?=$clientToken?>"});
     $(document).ready(function(){
-        $('#payment-form').on('afterValidate', function(e){
-//            e.preventDefault();
-//            $('#payment-form').submit();
+        $('#paymentform-braintree_nonce').val('');
+        $('#payment-form').on('beforeSubmit', function(e){
+
             e.preventDefault();
-            clientToken.tokenizeCard({
-                number: $("#paymentform-card_number").text(),
-                expirationDate: $("#paymentform-card_expired_month").text() + "/" + $("paymentform-card_expired_year").text()
-            }, function (err, nonce) {
-                // Send nonce to your server
-                console.log(err);
-                console.log(nonce);
-                $('#paymentform-braintree_nonce').val(nonce);
-                $('#payment-form').submit();
-            });
+
+            var paymentCurrency = $('#paymentform-currency').val();
+            if(paymentCurrency == "USD" || $('#paymentform-braintree_nonce').val() != ""){
+                return true;
+            }else {
+                clientToken.tokenizeCard({
+                    number: $("#paymentform-card_number").val(),
+                    expirationDate: $("#paymentform-card_expired_month").val() + "/" + $("#paymentform-card_expired_year").val().substr(2, 4)
+                }, function (err, nonce) {
+                    // Send nonce to your server
+                    $('#paymentform-braintree_nonce').val(nonce);
+                    $('#payment-form').submit();
+                });
+                return false;
+            }
         });
 
     })

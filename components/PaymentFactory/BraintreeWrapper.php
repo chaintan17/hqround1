@@ -6,7 +6,7 @@
  * Time: 11:31 PM
  */
 
-namespace app\models;
+namespace app\components\PaymentFactory;
 
 
 use Braintree_Configuration;
@@ -28,15 +28,22 @@ class BraintreeWrapper implements iPaymentInterface
     }
 
     /**
-     * @return \app\models\PaymentResult
+     * @return PaymentResult
      */
     public function makePayment()
     {
-        $result = \Braintree_Transaction::sale([
+        $braintreeResult = \Braintree_Transaction::sale([
             'amount' => $this->_price,
             'paymentMethodNonce' => $this->_nonce
         ]);
-        die(var_dump($result));
+        $result = new PaymentResult();
+        $result->status = $braintreeResult->success;
+        if($result->status){
+            $result->message = $braintreeResult->transaction->id;
+        }else{
+            $result->message = $braintreeResult->message;
+        }
+        return $result;
     }
 
     /**

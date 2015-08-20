@@ -6,7 +6,7 @@
  * Time: 10:43 PM
  */
 
-namespace app\models;
+namespace app\components\PaymentFactory;
 
 
 class PaymentFactory
@@ -22,7 +22,7 @@ class PaymentFactory
      */
     public function makePayment(){
         $result = null;
-        if(false){
+        if($this->_braintreenonce == null || $this->_braintreenonce == ""){
             $paypalWrapper = new PaypalWrapper();
             $paypalWrapper->setPayerInfo($this->_payerInfo);
             $paypalWrapper->setPrice($this->_price);

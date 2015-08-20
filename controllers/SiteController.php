@@ -2,11 +2,9 @@
 
 namespace app\controllers;
 
-use app\models\BraintreeWrapper;
-use app\models\ContactForm;
-use app\models\LoginForm;
+use app\components\PaymentFactory\BraintreeWrapper;
+use app\components\PaymentFactory\PaymentResult;
 use app\models\PaymentForm;
-use app\models\PaymentResult;
 use Braintree_ClientToken;
 use Yii;
 use yii\filters\AccessControl;

@@ -1,13 +1,11 @@
 <?php
 
-use app\models\PayerInfo;
-
-namespace app\models;
+namespace app\components\PaymentFactory;
 
 interface iPaymentInterface
 {
     /**
-     * @return \app\models\PaymentResult
+     * @return PaymentResult
      */
 
     public function makePayment();

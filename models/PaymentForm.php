@@ -8,16 +8,10 @@
 
 namespace app\models;
 
-use Exception;
-use PayPal\Api\CreditCard;
-use PayPal\Api\FundingInstrument;
+use app\components\PaymentFactory\PayerInfo;
+use app\components\PaymentFactory\PaymentFactory;
+use app\components\PaymentFactory\PaymentResult;
 use yii\base\Model;
-use PayPal\Api\Amount;
-use PayPal\Api\Item;
-use PayPal\Api\ItemList;
-use PayPal\Api\Payer;
-use PayPal\Api\Payment;
-use PayPal\Api\Transaction;
 
 class PaymentForm extends Model
 {
@@ -49,7 +43,8 @@ class PaymentForm extends Model
             [['card_number', 'card_expired_month', 'card_expired_year'], 'integer'],
             [['card_number'], 'string', 'length' => 16],
             [['card_expired_month'], 'string', 'length' => 2],
-            [['card_expired_year'], 'string', 'length' => 4]
+            [['card_expired_year'], 'string', 'length' => 4],
+            [['braintree_nonce'], 'safe']
         ];
     }
 
@@ -95,6 +90,7 @@ class PaymentForm extends Model
         $payerInfo->setCardCcv($this->card_ccv);
         $payerInfo->setExpired($this->card_expired_month, $this->card_expired_year);
 
+        $paymentFactory->setPayment_method_nonce($this->braintree_nonce);
         $paymentFactory->setPayerInfo($payerInfo);
         $paymentFactory->setProductName("Hotel Quickly");
         $paymentFactory->setPrice($this->price);
