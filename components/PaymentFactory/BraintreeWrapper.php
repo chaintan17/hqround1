@@ -55,6 +55,9 @@ class BraintreeWrapper
 
         $result->payby = $this->getMethodOfPayment();
 
+        //Add to database
+        $result->save();
+        
         return $result;
     }
 

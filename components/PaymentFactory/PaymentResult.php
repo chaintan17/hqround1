@@ -8,10 +8,16 @@
 
 namespace app\components\PaymentFactory;
 
-class PaymentResult
+class PaymentResult extends \yii\db\ActiveRecord
 {
 
     public $status;
     public $message;
     public $payby;
+
+
+    public static function tableName()
+    {
+        return 'payment_result';
+    }
 }
