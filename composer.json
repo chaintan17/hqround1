@@ -19,7 +19,8 @@
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
         "paypal/rest-api-sdk-php": "*",
-        "braintree/braintree_php": "^3.2"
+        "braintree/braintree_php": "^3.2",
+        "PHPUnit/PHPUnit": "^4.8"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
