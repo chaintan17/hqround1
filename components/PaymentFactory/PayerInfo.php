@@ -68,4 +68,9 @@ class PayerInfo
     }
 
 
+    public function getCardExpiredMmYy()
+    {
+        return $this->_cardExpired[0] . "/" . substr($this->_cardExpired[1], 2,2);
+    }
+
 }

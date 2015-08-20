@@ -29,7 +29,6 @@ $this->title = 'HQ Round1 PHP';
     ?>
     <div class="col-sm-6">
     <h2>Order</h2>
-        <?= $form->field($model, "braintree_nonce")->hiddenInput()->label(false);?>
     <?= $form->field($model, 'price')?>
     <?= $form->field($model, 'currency')->dropDownList(\app\models\PaymentForm::$currenyList)?>
     <?= $form->field($model, 'full_name')?>
@@ -63,29 +62,3 @@ $this->title = 'HQ Round1 PHP';
 
 
 <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
-<script>
-    var clientToken = new braintree.api.Client({clientToken: "<?=$clientToken?>"});
-    $(document).ready(function(){
-        $('#paymentform-braintree_nonce').val('');
-        $('#payment-form').on('beforeSubmit', function(e){
-
-            e.preventDefault();
-
-            var paymentCurrency = $('#paymentform-currency').val();
-            if(paymentCurrency == "USD" || $('#paymentform-braintree_nonce').val() != ""){
-                return true;
-            }else {
-                clientToken.tokenizeCard({
-                    number: $("#paymentform-card_number").val(),
-                    expirationDate: $("#paymentform-card_expired_month").val() + "/" + $("#paymentform-card_expired_year").val().substr(2, 4)
-                }, function (err, nonce) {
-                    // Send nonce to your server
-                    $('#paymentform-braintree_nonce').val(nonce);
-                    $('#payment-form').submit();
-                });
-                return false;
-            }
-        });
-
-    })
-</script>

@@ -5,6 +5,11 @@ namespace app\components\PaymentFactory;
 interface iPaymentInterface
 {
     /**
+     * @return string
+     */
+    public function getMethodOfPayment();
+
+    /**
      * @return PaymentResult
      */
 

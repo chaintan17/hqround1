@@ -11,10 +11,15 @@ namespace app\components\PaymentFactory;
 
 use Braintree_Configuration;
 
-class BraintreeWrapper implements iPaymentInterface
+class BraintreeWrapper
 {
+    private $_productName;
     private $_price;
-    private $_nonce;
+    private $_currency;
+    /**
+     * @var PayerInfo $_payerInfo
+     */
+    private $_payerInfo;
 
     /**
      * BriantreeWrapper constructor.
@@ -34,7 +39,11 @@ class BraintreeWrapper implements iPaymentInterface
     {
         $braintreeResult = \Braintree_Transaction::sale([
             'amount' => $this->_price,
-            'paymentMethodNonce' => $this->_nonce
+            'creditCard' => array(
+                'number' => $this->_payerInfo->getCardNumber(),
+                'expirationDate' => $this->_payerInfo->getCardExpiredMmYy(),
+            ),
+//            'paymentMethodNonce' => $this->_nonce
         ]);
         $result = new PaymentResult();
         $result->status = $braintreeResult->success;
@@ -43,6 +52,9 @@ class BraintreeWrapper implements iPaymentInterface
         }else{
             $result->message = $braintreeResult->message;
         }
+
+        $result->payby = $this->getMethodOfPayment();
+
         return $result;
     }
 
@@ -52,7 +64,7 @@ class BraintreeWrapper implements iPaymentInterface
      */
     public function setProductName($productname)
     {
-        // TODO: Implement setProductName() method.
+        $this->_productName = $productname;
     }
 
     /**
@@ -66,7 +78,7 @@ class BraintreeWrapper implements iPaymentInterface
 
     public function setPayerInfo(PayerInfo $payerInfo)
     {
-        // TODO: Implement setPayerInfo() method.
+        $this->_payerInfo = $payerInfo;
     }
 
     /**
@@ -75,11 +87,14 @@ class BraintreeWrapper implements iPaymentInterface
      */
     public function setCurrency($currency)
     {
-        // TODO: Implement setCurrency() method.
+        $this->_currency = $currency;
     }
 
-    public function setNonce($_braintreenonce)
+    /**
+     * @return string
+     */
+    public function getMethodOfPayment()
     {
-        $this->_nonce = $_braintreenonce;
+        return "braintree";
     }
 }

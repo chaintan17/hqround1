@@ -41,7 +41,7 @@ class PaymentForm extends Model
                 'card_expired', 'card_ccv'], 'required'],
             [['price'], 'number'],
             [['card_number', 'card_expired_month', 'card_expired_year'], 'integer'],
-            [['card_number'], 'string', 'length' => 16],
+            [['card_number'], 'string', 'length' => [15, 16]],
             [['card_expired_month'], 'string', 'length' => 2],
             [['card_expired_year'], 'string', 'length' => 4],
             [['braintree_nonce'], 'safe']

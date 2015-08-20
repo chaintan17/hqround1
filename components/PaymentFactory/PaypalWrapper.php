@@ -14,7 +14,7 @@ use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
 
 
-class PaypalWrapper implements iPaymentInterface
+class PaypalWrapper
 {
     private $_clientId;
     private $_clientSecret;
@@ -103,6 +103,8 @@ class PaypalWrapper implements iPaymentInterface
             $result->message = $ex->getMessage();
         }
 
+        $result->payby = $this->getMethodOfPayment();
+
         return $result;
     }
 
@@ -128,5 +130,13 @@ class PaypalWrapper implements iPaymentInterface
     public function setCurrency($currency)
     {
         $this->_currency = $currency;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMethodOfPayment()
+    {
+        return "paypal";
     }
 }

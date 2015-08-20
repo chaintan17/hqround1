@@ -13,4 +13,5 @@ class PaymentResult
 
     public $status;
     public $message;
+    public $payby;
 }
